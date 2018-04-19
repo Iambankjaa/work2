@@ -319,38 +319,43 @@ class Gui:
         #     pass
         # print(self.file.groupby([self.List_Header[0]]).agg(AGG))
         column = 10
-        for j in self.Agg_Column2:
-            print(j)
+        # # for j in self.Agg_Column2:
+        # #     print(j)
+        # #     print(self.Agg_Column2[0])
+        # #     print(self.Agg_Column2[1])
+        # #     print(AGG)
+        d = self.file.groupby(self.Agg_Column2).agg(AGG)
+        # d1 = self.file.groupby(self.Agg_Column2[0]).agg(d)
+        print(d)
+        # print(self.Agg_Column1)
+        # print(self.Agg_Row2)
+        import matplotlib
+        matplotlib.use('TkAgg')
 
-            d = self.file.groupby([j]).agg(AGG)
-            # print(self.Agg_Column1)
-            # print(self.Agg_Row2)
-            import matplotlib
-            matplotlib.use('TkAgg')
+        from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+        from matplotlib.pyplot import Figure
 
-            from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
-            from matplotlib.pyplot import Figure
+        top = tk.Frame(self.root)
+        top.grid(column=column, row=0 ,columnspan = 10 ,rowspan = 10)
 
-            top = tk.Frame(self.root)
-            top.grid(column=column, row=0 ,columnspan = 10 ,rowspan = 10)
+        fig = matplotlib.pyplot.Figure()
 
-            fig = matplotlib.pyplot.Figure()
+        canvas = FigureCanvasTkAgg(fig, top)
 
-            canvas = FigureCanvasTkAgg(fig, top)
+        canvas.get_tk_widget().pack()
 
-            canvas.get_tk_widget().pack()
+        toolbar = NavigationToolbar2TkAgg(canvas, top)
+        toolbar.update()
+        canvas._tkcanvas.pack()
 
-            toolbar = NavigationToolbar2TkAgg(canvas, top)
-            toolbar.update()
-            canvas._tkcanvas.pack()
+        ax1 = fig.add_subplot(111)
 
-            ax1 = fig.add_subplot(111)
-
-            # draw on this plot
-            d.plot(kind='bar', legend=False, ax=ax1)
-            column = column+10
+        # draw on this plot
+        d.plot(kind='bar', legend=False, ax=ax1)
+        # column = column+10
         for l in self.Agg_Row2:
             print(l)
+            print(AGG)
             d = self.file.groupby([l]).agg(AGG)
             # print(self.Agg_Column1)
             # print(self.Agg_Row2)
@@ -361,7 +366,7 @@ class Gui:
             from matplotlib.pyplot import Figure
 
             top = tk.Frame(self.root)
-            top.grid(column=column, row=0 ,columnspan = 10 ,rowspan = 10)
+            top.grid(column=10, row=0 ,columnspan = 10 ,rowspan = 10)
 
             fig = matplotlib.pyplot.Figure()
 
@@ -377,10 +382,7 @@ class Gui:
 
             # draw on this plot
             d.plot(kind='bar', legend=True, ax=ax1)
-            column = column+10
-        # vsb = tk.Scrollbar(self.root, orient="vertical")
-        # vsb.grid(row=0, column=1, sticky='ns')
-        # canvas.configure(yscrollcommand=vsb.set)
+            row = row+10
         self.root.mainloop()
 
         #
