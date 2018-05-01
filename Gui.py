@@ -406,12 +406,15 @@ class Gui:
         for i in range(len(list1)):
                 print(list1[i][0])
                 print(list1[i][1])
-                self.df_filtered = self.file.loc[self.file[list1[i][0]].isin(list1[i][1])]
+                if i == 0:
+                    df_filtered1 = self.file.loc[self.file[list1[i][0]].isin(list1[i][1])]
+                else:
+                    df_filtered = df_filtered1.loc[self.file[list1[i][0]].isin(list1[i][1])]
 
         print("44444")
         print(len(self.listfilter))
         print(list1)
-        print(len(self.listfilter))
+
         print("545555")
         self.AGG = {}
 
@@ -436,31 +439,40 @@ class Gui:
         toolbar.update()
         canvas._tkcanvas.pack()
         self.ax1 = self.fig.add_subplot(111)
+        self.fig.subplots_adjust(bottom = 0.3)
 
-        # try:
-        self.d = self.file.groupby(self.Agg_Column2).agg(self.AGG)
-        print(self.d)
-        if self.listfilter == []:
-            self.d.plot(kind='bar', legend=True, ax=self.ax1)
-            maxslide = len(self.d.count(1))
-        else:
-            print("babo")
+        try:
+            if self.listfilter == []:
+                self.d = self.file.groupby(self.Agg_Column2).agg(self.AGG)
+                print(self.d)
+                self.d.plot(kind='bar', legend=True, ax=self.ax1)
+                maxslide = len(self.d.count(1))
+            else:
+                print("babo")
+                try:
+                    self.dataframe = df_filtered.groupby(self.Agg_Column2).agg(self.AGG)
+                except:
+                    self.dataframe = df_filtered1.groupby(self.Agg_Column2).agg(self.AGG)
                 #print(self.file.loc[self.file[list1[0][0]].isin(list1[0][1])])
-            self.df_filtered.plot(kind='bar', legend=True, ax=self.ax1)
-            maxslide = len(self.df_filtered.count(1))
-        # except:
-        #     print('error')
-        #     print(self.AGG)
-            # self.d = self.file.groupby(self.Agg_Row2).agg(self.AGG)
-            # if self.listfilter == []:
-            #     self.d.plot(kind='bar', legend=True, ax=self.ax1)
-            #     maxslide = len(self.d.count(1))
-            # else:
-            #     self.df_filtered = self.d.filter(like=self.listfilter[0], axis=0)
-            #     # draw on this plot
-            #     print(self.df_filtered)
-            #     self.df_filtered.plot(kind='bar', legend=True, ax=self.ax1)
-            #     maxslide = len(self.df_filtered.count(1))
+                print(self.dataframe)
+                self.dataframe.plot(kind='bar', legend=True, ax=self.ax1)
+                maxslide = len(self.dataframe.count(1))
+        except:
+            print('error')
+            if self.listfilter == []:
+                self.d = self.file.groupby(self.Agg_Row2).agg(self.AGG)
+                self.d.plot(kind='bar', legend=True, ax=self.ax1)
+                print(self.d)
+                maxslide = len(self.d.count(1))
+            else:
+                # try:
+                #     self.dataframe = df_filtered.groupby(self.Agg_Column2).agg(self.AGG)
+                # except:
+                #     self.dataframe = df_filtered1.groupby(self.Agg_Column2).agg(self.AGG)
+                # self.dataframe.plot(kind='bar', legend=True, ax=self.ax1)
+                # print(self.dataframe)
+                # maxslide = len(self.dataframe.count(1))
+                print("can't fill")
         if maxslide > 10:
             ax2 = self.fig.add_subplot(911)
             self.slide = Slider(ax2, "X Axis", 0.0, maxslide-10,valinit=0)
