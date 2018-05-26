@@ -341,7 +341,7 @@ class Gui:
             try:
                 self.file = pd.read_excel(name)
                 self.filename.append(name)
-                print(self.file)
+                # print(self.file)
                 header = self.file.columns.values
                 self.List_Header = list()
                 for i in header:
@@ -416,12 +416,16 @@ class Gui:
 
         for i in range(len(Header)):
            #print(i)
-           tree.column(i, width = widthValue+50, stretch=True)
-           tree.heading(i, text= Header[i])
+            tree.column(i, width = widthValue+50, stretch=True)
+            tree.heading(i, text= Header[i])
+            print(i)
         #print(Header)
         List=list()
         for row in Dataframe.iterrows():
+            # print(row)
             (index, data) = row
+
+            # print(row)
             List.append(data.tolist())
 
         for i in range(len(Dataframe)):
@@ -494,31 +498,30 @@ class Gui:
             self.fig.subplots_adjust(bottom = 0.3)
             if len(self.Agg_DimensionsDate) > 0:
                 File = self.file
-                print(File)
+                # print(File)
                 print(self.value_radio.get())
                 print("date")
                 print(self.file[self.Agg_DimensionsDate[0]])
                 # self.ValueDimensionsDateForPlot(File)
                 if self.value_radio.get() == "Year":
                     self.group = File.groupby(File[self.Agg_DimensionsDate[0]].dt.year).agg(self.Agg_Measures)
-                    self.groupfortable = File.groupby((File[self.Agg_DimensionsDate[0]].dt.year), as_index=False).agg(self.Agg_Measures)
+                    # self.groupfortable = File.groupby((File[self.Agg_DimensionsDate[0]].dt.year), as_index=False).agg(self.Agg_Measures)
                 if self.value_radio.get() == "Month":
                     self.group = File.groupby(File[self.Agg_DimensionsDate[0]].dt.month).agg(self.Agg_Measures)
-                    self.groupfortable = File.groupby((File[self.Agg_DimensionsDate[0]].dt.month), as_index=False).agg(self.Agg_Measures)
+                    # self.groupfortable = File.groupby((File[self.Agg_DimensionsDate[0]].dt.month), as_index=False).agg(self.Agg_Measures)
                 if self.value_radio.get() == "Day":
                     self.group = File.groupby(File[self.Agg_DimensionsDate[0]].dt.day).agg(self.Agg_Measures)
-                    self.groupfortable = File.groupby((File[self.Agg_DimensionsDate[0]].dt.day), as_index=False).agg(self.Agg_Measures)
-                # self.groupfortable = (self.Filter()).groupby(self.Agg_DimensionsDate, as_index=False).agg(self.Agg_Measures)
+                    # self.groupfortable = File.groupby((File[self.Agg_DimensionsDate[0]].dt.day), as_index=False).agg(self.Agg_Measures)
                 set1 = set()
                 for row in File[self.Agg_DimensionsDate[0]]:
                     i = 1
                     set1.add(i)
-                # self.ValueNone2DataFrame(set1)
                 self.group.plot(kind='bar', legend=True, ax=self.ax1)
+                self.Table(self.group)
             else:
                 print("nonedate")
                 self.group = (self.Filter()).groupby(self.Agg_Dimensions).agg(self.Agg_Measures)
-                self.groupfortable = (self.Filter()).groupby(self.Agg_Dimensions, as_index=False).agg(self.Agg_Measures)
+                # self.groupfortable = (self.Filter()).groupby(self.Agg_Dimensions, as_index=False).agg(self.Agg_Measures)
                 self.group.plot(kind='bar', legend=True, ax=self.ax1)
                 maxslide = len(self.group.count(1))
                 if maxslide > 10:
@@ -526,9 +529,9 @@ class Gui:
                     self.slide = Slider(ax2, "", 0.0, maxslide-10,valinit=0)
                     self.ax1.set_xlim([0,9])
                     self.slide.on_changed(self.Update)
-            print(self.group)
-            print(self.groupfortable)
-            self.Table(self.groupfortable)
+                print(self.group)
+                # print(self.groupfortable)
+                self.Table(self.group)
         # except TypeError or ValueError or AttributeError:
         #     pass
 
